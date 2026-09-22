@@ -1,4 +1,6 @@
-export const PORTA = Number(process.env.PORT) || 8888;
+import "dotenv/config";
+
+export const PORTA = Number(process.env.PORT);
 
 export const SUCCESS_REQUEST = 200; // SUCESSO
 export const CREATED_SUCCESS_REQUEST = 201; // CRIADO COM SUCESSO
