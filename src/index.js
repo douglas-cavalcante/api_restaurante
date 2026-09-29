@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 
-import routesMesas from "./routes/mesas.js";
-import routesItemsCardapio from "./routes/itemsCardapio.js";
+import routesMesas from "./routes/mesas.routes.js";
+import routesItemsCardapio from "./routes/itemsCardapio.routes.js";
 import routesPedidos from "./routes/pedidos.routes.js";
 import chefsRoutes from "./routes/chefs.routes.js";
 import agendaChefs from "./routes/agendaChefs.routes.js";
