@@ -4,16 +4,22 @@ import {
   CREATED_SUCCESS_REQUEST,
   SUCCESS_WITHOUT_RESPONSE,
 } from "../constants/server.js";
+import CreateUserService from "../services/users/CreateUserService.js";
 
 const chefRepository = AppDataSource.getRepository(ChefEntity);
+const createUserService = new CreateUserService();
 
 class ChefController {
   async cadastrar(request, response) {
     const dados = request.body; // recuperar os valores vindo do body
 
-    /* FAZER VALIDACAO */
-
     const chefCriado = await chefRepository.save(dados);
+    await createUserService.create({
+      nome: dados.nome,
+      role: "chef",
+      email: dados.email,
+      senha: dados.senha,
+    });
 
     response.status(CREATED_SUCCESS_REQUEST).send(chefCriado);
   }

@@ -5,9 +5,12 @@ import {
   CREATED_SUCCESS_REQUEST,
   NOT_FOUND_ERROR,
 } from "../constants/server.js";
+import CreatePedidoService from "../services/pedidos/CreatePedidoService.js";
 
 const pedidoRepository = AppDataSource.getRepository(PedidoEntity);
 const mesaRepository = AppDataSource.getRepository(MesaEntity);
+
+const createPedidoService = new CreatePedidoService();
 
 class PedidoController {
   async fechar(request, response) {
@@ -43,17 +46,10 @@ class PedidoController {
 
   async cadastrar(request, response) {
     const dados = request.body;
-    /* Validacao AQUI */
-    const mesa = await mesaRepository.findOneBy({ id: dados.mesa_id });
 
-    if (mesa.reservado === true) {
-      response.status(409).send({ error: "A mesa já está reservada" });
-    } else {
-      const novoPedido = await pedidoRepository.save(dados);
-      await mesaRepository.update(dados.mesa_id, { reservado: true });
+    const novoPedido = await createPedidoService.create(dados);
 
-      response.status(CREATED_SUCCESS_REQUEST).send(novoPedido);
-    }
+    response.status(CREATED_SUCCESS_REQUEST).send(novoPedido);
   }
 
   async buscarTodos(request, response) {
