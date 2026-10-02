@@ -33,6 +33,11 @@ export const PedidoEntity = new EntitySchema({
       scale: 2,
       nullable: true,
     },
+    comprovante_key: {
+      type: "varchar",
+      length: 255,
+      nullable: true,
+    },
     criado_em: {
       type: "timestamp with time zone",
       nullable: false,

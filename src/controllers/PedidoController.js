@@ -7,10 +7,13 @@ import {
 } from "../constants/server.js";
 import CreatePedidoService from "../services/pedidos/CreatePedidoService.js";
 
+import S3StorageService from "../services/storage/S3StorageService.js";
+
 const pedidoRepository = AppDataSource.getRepository(PedidoEntity);
 const mesaRepository = AppDataSource.getRepository(MesaEntity);
 
 const createPedidoService = new CreatePedidoService();
+const s3StorageService = new S3StorageService();
 
 class PedidoController {
   async fechar(request, response) {
@@ -79,6 +82,28 @@ class PedidoController {
     }, 0);
 
     response.send({ ...pedidoEncontrado, subTotal });
+  }
+
+  async salvarComprovante(request, response) {
+    const key = await s3StorageService.upload(request.file, "/comprovantes");
+
+    await pedidoRepository.update(request.params.id, { comprovante_key: key });
+
+    response.send({ message: "upload feito com sucesso" });
+  }
+
+  async buscarComprovante(request, response) {
+    const id = request.params.id; // key recebida da requisicao
+
+    const pedido = await pedidoRepository.findOne({
+      where: { id },
+    });
+
+    const url = await s3StorageService.gerarUrlTemporaria(
+      pedido.comprovante_key,
+    );
+
+    response.send(url);
   }
 }
 

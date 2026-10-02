@@ -44,6 +44,7 @@ CREATE TABLE "pedidos"(
     "fechado" BOOLEAN NOT NULL DEFAULT FALSE,
     "data" DATE NOT NULL,
     "total" DECIMAL(10, 2) NULL,
+    "comprovante_key" VARCHAR(255) NULL,
     "criado_em" TIMESTAMP(0) WITH
         TIME zone NOT NULL DEFAULT NOW(), "atualizado_em" TIMESTAMP(0)
     WITH
