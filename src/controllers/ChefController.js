@@ -5,9 +5,15 @@ import {
   SUCCESS_WITHOUT_RESPONSE,
 } from "../constants/server.js";
 import CreateUserService from "../services/users/CreateUserService.js";
+import SesEmailService from "../services/email/SesEmailService.js";
+import {
+  boasVindasChefHtml,
+  boasVindasChefTexto,
+} from "../services/email/templates/boasVindasChef.js";
 
 const chefRepository = AppDataSource.getRepository(ChefEntity);
 const createUserService = new CreateUserService();
+const sesEmailService = new SesEmailService();
 
 class ChefController {
   async cadastrar(request, response) {
@@ -19,6 +25,13 @@ class ChefController {
       role: "chef",
       email: dados.email,
       senha: dados.senha,
+    });
+
+    sesEmailService.enviar({
+      para: dados.email,
+      assunto: `Boas vindas ${dados.nome}`,
+      html: boasVindasChefHtml({ nome: dados.nome }),
+      texto: boasVindasChefTexto({ nome: dados.nome }),
     });
 
     response.status(CREATED_SUCCESS_REQUEST).send(chefCriado);
